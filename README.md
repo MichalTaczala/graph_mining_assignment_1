@@ -4,8 +4,8 @@
 
 # How to run code:
 - Standart Kronecker:
-python main.py -f data/input_cit-HepTh_det.txt -k 7 -o citHepTh_normal -gf data/cit-HepTh
-- Stochastic Kronecker Ph
-python main.py -f data/input_cit-HepPh.txt -k 14 -o citHepPh_stochastic -gf data/cit-HepPh -s
-- Stochastic Kronecker Th
-python main.py -f data/input_cit-HepTh.txt -k 14 -o citHepTh_stochastic -gf data/cit-HepTh -s
+- python main.py -f data/input_cit-HepTh_det.txt -k 7 -o citHepTh_normal -gf data/cit-HepTh
+- Stochastic Kronecker Ph:
+- python main.py -f data/input_cit-HepPh.txt -k 14 -o citHepPh_stochastic -gf data/cit-HepPh -s
+- Stochastic Kronecker Th:
+- python main.py -f data/input_cit-HepTh.txt -k 14 -o citHepTh_stochastic -gf data/cit-HepTh -s
