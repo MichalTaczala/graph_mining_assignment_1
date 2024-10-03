@@ -50,19 +50,16 @@ class STKProds:
         # This method iterates through each Kronecker power level and generates edges by calling the computeProb function until the target edge number is reached, as estimated from the real-world graph.
         ############################################################################
 
-        suma = self.initMat.sum()
-        self.initMat2 = self.initMat / suma
+        sum_of_probabilities = self.initMat.sum()
+        self.initMat2 = self.initMat / sum_of_probabilities
         nr_rows, nr_cols = self.initMat.shape
         self.indexes = [(row, col) for row in range(nr_rows) for col in range(nr_cols)]
         self.flattened = self.initMat2.flatten().tolist()
         for power_level in range(1, self.k + 1):
             current_number_of_edges = 0
-            maxRow = 0
             limit = self.real_edgenum_list[power_level - 1]
             while current_number_of_edges < limit:
-                # while True:
                 row, col = self.computeProb(power_level)
-                maxRow = max(row, maxRow)
                 if self.adj_list[power_level - 1][row, col] != 1:
                     current_number_of_edges += 1
                     self.adj_list[power_level - 1][row, col] = 1
@@ -88,11 +85,10 @@ class STKProds:
         if currk == 0:
             return (0, 0)
 
-        res = int(np.random.choice(len(self.indexes), 1, p=self.flattened))
-        first_part = np.array(self.indexes[res]) * 2 ** (currk - 1)
-        second_part = self.computeProb(currk - 1)
-        to_return = tuple(
-            first + second for first, second in zip(first_part, second_part)
+        chosen_option = int(np.random.choice(len(self.indexes), 1, p=self.flattened))
+        non_recursive_part = np.array(self.indexes[chosen_option]) * 2 ** (currk - 1)
+        recursive_part = self.computeProb(currk - 1)
+        return tuple(
+            first + second for first, second in zip(non_recursive_part, recursive_part)
         )
-        return to_return
         ######################### Implementation end ###############################
