@@ -1,6 +1,6 @@
 # Help received
-Professor Shin Kijung - https://www.classum.com/main/space/170876/community/16
-TA ChoeMinyoung - https://www.classum.com/main/space/170876/community/6
+- Professor Shin Kijung - https://www.classum.com/main/space/170876/community/16
+- TA ChoeMinyoung - https://www.classum.com/main/space/170876/community/6
 
 # How to run code:
 - Standart Kronecker:
