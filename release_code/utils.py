@@ -13,7 +13,7 @@ def read_graph(graph_fname):
                 if not line: continue
                 if line.startswith("number of nodes"):
                     num_nodes = int(line.split(": ")[-1])
-                    adj_real = lil_matrix((num_nodes, num_nodes), dtype=np.int)
+                    adj_real = lil_matrix((num_nodes, num_nodes), dtype=np.int64)
                 else:
                     words = line.split("\t")
                     node1, node2 = int(words[0]), int(words[1])
