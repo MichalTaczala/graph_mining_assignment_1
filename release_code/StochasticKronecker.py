@@ -19,11 +19,25 @@ class STKProds:
         # calculates the target edge number of each Kronecker power level from the real-world adjacency matrix
         # and initializes adjacency lists for storing the Kronecker product graphs.
         ############################################################################
-        self.initMat = # todo
-        self.N = # the size of initMat
+
+        # initialize base matrix
+        initial_matrix = np.array([])
+        with open(filePath) as f:
+            for line in f:
+                line = line.strip()
+                numbers_strings = line.split("   ")
+                numbers = [float(number) for number in numbers_strings]
+                if initial_matrix.size == 0:
+                    initial_matrix = np.append(initial_matrix, numbers)
+                else:
+                    initial_matrix = np.vstack((initial_matrix, numbers))
+
+        self.initMat = initial_matrix
+
+        self.N = self.initMat.shape[0]
         size_list = [self.N **_k for _k in range(1, self.k)] + [real_adj.shape[0]]
         self.real_edgenum_list = [np.sum(real_adj[:_size, :_size] ) for _size in size_list]
-        self.adj_list = [lil_matrix((self.N ** _k, self.N ** _k), dtype=np.int) for _k in range(1, self.k+1)]
+        self.adj_list = [lil_matrix((self.N ** _k, self.N ** _k), dtype=np.int64) for _k in range(1, self.k+1)]
         ######################### Implementation end ###########################
 
     def produceGraph(self) -> List[lil_matrix]:
@@ -35,9 +49,28 @@ class STKProds:
         #
         # This method iterates through each Kronecker power level and generates edges by calling the computeProb function until the target edge number is reached, as estimated from the real-world graph.
         ############################################################################
-        
+
+        suma = self.initMat.sum()
+        self.initMat2 = self.initMat / suma
+        nr_rows, nr_cols = self.initMat.shape
+        self.indexes = [(row, col) for row in range(nr_rows) for col in range(nr_cols)]
+        self.flattened = self.initMat2.flatten().tolist()
+        for power_level in range(1, self.k + 1):
+            current_number_of_edges = 0
+            maxRow = 0
+            limit = self.real_edgenum_list[power_level - 1]
+            while current_number_of_edges < limit:
+                # while True:
+                row, col = self.computeProb(power_level)
+                maxRow = max(row, maxRow)
+                if self.adj_list[power_level - 1][row, col] != 1:
+                    current_number_of_edges += 1
+                    self.adj_list[power_level - 1][row, col] = 1
+
+        return self.adj_list
+
         ######################### Implementation end ###############################
-                
+
     def computeProb(self, currk) -> Tuple[int, int]:
         ############## #TODO: Complete the function #################################
         # Samples the row and column indices for placing an edge in the Kronecker power matrix.
@@ -52,5 +85,14 @@ class STKProds:
         # from the initial matrix. It recursively samples indices at each level until 
         # the specified Kronecker power level is reached.
         ############################################################################
-        
+        if currk == 0:
+            return (0, 0)
+
+        res = int(np.random.choice(len(self.indexes), 1, p=self.flattened))
+        first_part = np.array(self.indexes[res]) * 2 ** (currk - 1)
+        second_part = self.computeProb(currk - 1)
+        to_return = tuple(
+            first + second for first, second in zip(first_part, second_part)
+        )
+        return to_return
         ######################### Implementation end ###############################
